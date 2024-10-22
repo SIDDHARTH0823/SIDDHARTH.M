@@ -1,0 +1,33 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+import plotly.graph_objects as go
+df = pd.read_csv('/kaggle/input/credit-card-fraud-detection/credit_card_fraud_dataset.csv')
+df.head()
+df.isnull().sum()
+df.drop(['TransactionID'	,'TransactionDate'],axis=1,inplace=True)
+df.head()
+df.info()
+df.describe()
+!pip install numba==0.53.1
+!pip install ydata-profiling
+!pip install visions --upgrade
+!pip install ydata-profiling --upgrade
+from ydata_profiling import ProfileReport
+profile = ProfileReport(df)
+profile.to_notebook_iframe()
+X = df[['Amount', 'MerchantID']] 
+y = df['IsFraud'] 
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+print(X_train.shape)
+print(X_test.shape)
+print(y_train.shape)
+print(y_test.shape)
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+model = LogisticRegression()
+model.fit(X_train,y_train)
+y_pred = model.predict(X_test)
+print('The Accuracy =',accuracy_score(y_test,y_pred))
